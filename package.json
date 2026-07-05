@@ -1,0 +1,30 @@
+{
+  "name": "dgn-submission-hub",
+  "version": "1.0.0",
+  "description": "بوابة موحدة لتسجيل بيانات الفنادق والهيئات السياحية مع لوحة أدمن موحدة الدخول",
+  "main": "main.js",
+  "author": "Arabian Travel News",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.atn.submission-hub",
+    "productName": "ATN Submission Hub",
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "submission-hub.html",
+      "package.json"
+    ],
+    "mac": { "target": "dmg" },
+    "win": { "target": "nsis" },
+    "linux": { "target": "AppImage" }
+  }
+}
