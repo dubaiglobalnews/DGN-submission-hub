@@ -1,1 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ATN Submission Hub</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(160deg, #1a3a2e 0%, #2c4a3e 100%);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+  .box {
+    background: #fff;
+    color: #222;
+    border-radius: 16px;
+    padding: 36px 32px;
+    width: 380px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.35);
+    text-align: center;
+  }
+  .icon { font-size: 2.6rem; margin-bottom: 6px; }
+  h1 { font-size: 1.25rem; margin-bottom: 4px; }
+  p.sub { font-size: .8rem; color: #666; margin-bottom: 26px; }
+  button {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    font-size: .95rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: transform .15s, opacity .15s;
+  }
+  button:hover { transform: translateY(-1px); opacity: .92; }
+  #btnUser { background: #2c4a3e; color: #fff; }
+  #btnAdminToggle { background: #f0f0ee; color: #2c4a3e; border: 1px solid #ddd; }
+  .admin-panel { display: none; margin-top: 6px; }
+  .admin-panel.show { display: block; }
+  input[type="password"] {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: .9rem;
+    margin-bottom: 10px;
+  }
+  #btnAdminGo { background: #b8860b; color: #fff; }
+  #errorMsg { color: #c0392b; font-size: .78rem; margin-top: 8px; min-height: 16px; }
+</style>
+</head>
+<body>
+  <div class="box">
+    <div class="icon">🏨</div>
+    <h1>ATN Submission Hub</h1>
+    <p class="sub">Arabian Travel News — Data Submission Portal</p>
 
+    <button id="btnUser">➕ Submit New Listing</button>
+    <button id="btnAdminToggle">🔐 Admin Login</button>
+
+    <div class="admin-panel" id="adminPanel">
+      <input type="password" id="adminPwd" placeholder="Admin password">
+      <button id="btnAdminGo">Login as Admin</button>
+    </div>
+    <div id="errorMsg"></div>
+  </div>
+
+<script>
+  document.getElementById('btnUser').addEventListener('click', () => {
+    window.api.openUser()
+  })
+
+  document.getElementById('btnAdminToggle').addEventListener('click', () => {
+    document.getElementById('adminPanel').classList.toggle('show')
+    document.getElementById('adminPwd').focus()
+  })
+
+  async function tryAdminLogin() {
+    const pwd = document.getElementById('adminPwd').value
+    const errEl = document.getElementById('errorMsg')
+    errEl.textContent = ''
+    const btn = document.getElementById('btnAdminGo')
+    const original = btn.textContent
+    btn.textContent = 'Checking...'
+    btn.disabled = true
+    const res = await window.api.adminLogin(pwd)
+    document.getElementById('adminPwd').value = ''
+    btn.textContent = original
+    btn.disabled = false
+    if (!res.ok) {
+      errEl.textContent = res.error || 'Login failed'
+    } else {
+      document.getElementById('adminPanel').classList.remove('show')
+    }
+  }
+
+  document.getElementById('btnAdminGo').addEventListener('click', tryAdminLogin)
+  document.getElementById('adminPwd').addEventListener('keydown', e => {
+    if (e.key === 'Enter') tryAdminLogin()
+  })
+</script>
+</body>
+</html>
