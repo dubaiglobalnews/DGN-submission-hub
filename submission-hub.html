@@ -2828,6 +2828,11 @@ function atr_slugify(str) {
 function atr_stripHtmlKeepImages(html) {
   if (!html) return ''
   let result = html.replace(/<img[^>]+src="([^"]+)"[^>]*>/gi, '\n$1\n')
+  // حوّل نهايات الفقرات/الأسطر لسطر جديد فعلي قبل ما نشيل باقي الوسوم،
+  // وإلا هتتلحم كل الفقرات في شريط واحد متصل (كانت المشكلة الأصلية)
+  result = result
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|div|li|h[1-6])>/gi, '\n')
   return result
     .replace(/<[^>]*>/g, ' ')
     .replace(/&nbsp;/g, ' ')
@@ -2838,6 +2843,7 @@ function atr_stripHtmlKeepImages(html) {
     .replace(/[ \t]+/g, ' ')
     .replace(/\n /g, '\n')
     .replace(/ \n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
     .trim()
 }
 
